@@ -1,37 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-
+import Music from './Asset/apple_iphone.mp3';
+import useTimer from './useTimer';
 
 function App() {
-  const [timeData, setTimeData] = useState({
-    hour: 0,
-    minute: 0,
-    second: 0
-  })
 
-  const onUpdate = (event) => {
-    const {name, value} = event.target
-    const isValid = (name == 'hour' ? checkValidInput(24, value) : checkValidInput(60, value))
-    if (!isValid) {
-      return
-    } else {
-      setTimeData(prevState => {
-        return {
-          ...prevState,
-          [name]: value
-        }
-      })
-    }
-  }
-
-  const checkValidInput = (maxTime ,value) => {
-    return(0 <= value & value <= maxTime? true: false)
-  }
-
-
+  const {AudioRef, timeData, cancelTimer, startPauseTimer, onUpdate} = useTimer();
 
   return (
     <Container>
+      <audio src = {Music} ref={AudioRef}/>
       <Stopwatch>
         <TimeContainer>
           <TimeSelect
@@ -59,8 +37,8 @@ function App() {
         </TimeContainer>
       </Stopwatch>
       <ButtonContainer>
-        <FunctionButton color='252525'><ButtonRing></ButtonRing>Cancel</FunctionButton>
-        <FunctionButton color='115700'><ButtonRing></ButtonRing>Start</FunctionButton>
+        <FunctionButton color='252525' onClick={cancelTimer}><ButtonRing></ButtonRing>Cancel</FunctionButton>
+        <FunctionButton color='115700' onClick={startPauseTimer}><ButtonRing></ButtonRing>Start</FunctionButton>
       </ButtonContainer>
     </Container>
   )
